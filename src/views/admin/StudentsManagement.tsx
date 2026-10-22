@@ -33,7 +33,6 @@ export const StudentsManagement: React.FC = () => {
   const [className, setClassName] = useState('');
   const [customClassName, setCustomClassName] = useState('');
   const [isCustomClass, setIsCustomClass] = useState(false);
-  const [gender, setGender] = useState<'Laki-laki' | 'Perempuan'>('Laki-laki');
   const [formError, setFormError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -73,7 +72,6 @@ export const StudentsManagement: React.FC = () => {
     setClassName(defaultCls);
     setCustomClassName('');
     setIsCustomClass(false);
-    setGender('Laki-laki');
     setIsModalOpen(true);
   };
 
@@ -95,7 +93,6 @@ export const StudentsManagement: React.FC = () => {
       setCustomClassName(stu.class_name);
     }
 
-    setGender(stu.gender || 'Laki-laki');
     setIsModalOpen(true);
   };
 
@@ -130,7 +127,6 @@ export const StudentsManagement: React.FC = () => {
         name: name.trim(),
         birth_date: birthDate || '2009-01-01',
         class_name: targetClass,
-        gender,
       });
       showToast(`Data siswa "${name}" berhasil diperbarui!`);
     } else {
@@ -139,7 +135,6 @@ export const StudentsManagement: React.FC = () => {
         name: name.trim(),
         birth_date: birthDate || '2009-01-01',
         class_name: targetClass,
-        gender,
       });
       if (!success) {
         setFormError('Gagal menambahkan siswa. Pastikan NISN belum terdaftar.');
@@ -514,7 +509,6 @@ export const StudentsManagement: React.FC = () => {
                 <th className="px-5 py-3.5">Nama Siswa (Kolom 2)</th>
                 <th className="px-5 py-3.5">Tanggal Lahir (Kolom 3)</th>
                 <th className="px-5 py-3.5">Kelas (Kolom 4)</th>
-                <th className="px-5 py-3.5">Gender</th>
                 <th className="px-5 py-3.5 text-center">Status Memilih</th>
                 <th className="px-5 py-3.5 text-right w-36">Aksi</th>
               </tr>
@@ -522,7 +516,7 @@ export const StudentsManagement: React.FC = () => {
             <tbody className="divide-y divide-slate-100">
               {filteredStudents.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-5 py-12 text-center text-slate-400">
+                  <td colSpan={7} className="px-5 py-12 text-center text-slate-400">
                     <i className="bi bi-people text-3xl block mb-2 opacity-50"></i>
                     Belum ada data siswa yang terdaftar. <br />
                     <button
@@ -558,9 +552,6 @@ export const StudentsManagement: React.FC = () => {
                       <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-bold font-mono">
                         {stu.class_name}
                       </span>
-                    </td>
-                    <td className="px-5 py-3.5 text-slate-600">
-                      {stu.gender || 'Laki-laki'}
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       {stu.has_voted ? (
@@ -681,69 +672,53 @@ export const StudentsManagement: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Kelas (Kolom 4)
-                  </label>
-                  {isCustomClass ? (
-                    <div className="space-y-1.5">
-                      <input
-                        type="text"
-                        required
-                        placeholder="Ketik nama kelas (cth: VII.2)"
-                        value={customClassName}
-                        onChange={(e) => setCustomClassName(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsCustomClass(false);
-                          setClassName(classes[0]?.name || 'VII.2');
-                        }}
-                        className="text-[10px] text-blue-600 hover:underline"
-                      >
-                        Pilih dari daftar kelas
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-1.5">
-                      <select
-                        value={className}
-                        onChange={(e) => {
-                          if (e.target.value === '__CUSTOM__') {
-                            setIsCustomClass(true);
-                          } else {
-                            setClassName(e.target.value);
-                          }
-                        }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
-                      >
-                        {classes.map((c) => (
-                          <option key={c.id} value={c.name}>
-                            {c.name}
-                          </option>
-                        ))}
-                        <option value="__CUSTOM__">+ Tulis Kelas Baru / Lainnya</option>
-                      </select>
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Jenis Kelamin
-                  </label>
-                  <select
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value as 'Laki-laki' | 'Perempuan')}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
-                  >
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Kelas (Kolom 4)
+                </label>
+                {isCustomClass ? (
+                  <div className="space-y-1.5">
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ketik nama kelas (cth: VII.2)"
+                      value={customClassName}
+                      onChange={(e) => setCustomClassName(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCustomClass(false);
+                        setClassName(classes[0]?.name || 'VII.2');
+                      }}
+                      className="text-[10px] text-blue-600 hover:underline cursor-pointer"
+                    >
+                      Pilih dari daftar kelas
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-1.5">
+                    <select
+                      value={className}
+                      onChange={(e) => {
+                        if (e.target.value === '__CUSTOM__') {
+                          setIsCustomClass(true);
+                        } else {
+                          setClassName(e.target.value);
+                        }
+                      }}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
+                    >
+                      {classes.map((c) => (
+                        <option key={c.id} value={c.name}>
+                          {c.name}
+                        </option>
+                      ))}
+                      <option value="__CUSTOM__">+ Tulis Kelas Baru / Lainnya</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
               <div className="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">

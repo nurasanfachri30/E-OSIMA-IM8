@@ -8,7 +8,7 @@ interface StudentLoginProps {
 }
 
 export const StudentLogin: React.FC<StudentLoginProps> = ({ onGoToAdmin, onOpenSqlModal }) => {
-  const { settings, loginStudent, students, isDatabaseLive } = useElection();
+  const { settings, loginStudent, isDatabaseLive } = useElection();
   const [nisn, setNisn] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [dateInputMode, setDateInputMode] = useState<'picker' | 'text'>('picker');
@@ -31,17 +31,6 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({ onGoToAdmin, onOpenS
       setIsSubmitting(false);
     }
   };
-
-  // Helper quick fills for testing
-  const fillSample = (targetNisn: string, targetDate: string) => {
-    setNisn(targetNisn);
-    setBirthDate(targetDate);
-    setErrorMessage('');
-  };
-
-  // Find sample unvoted and voted student
-  const sampleUnvoted = students.find(s => !s.has_voted);
-  const sampleVoted = students.find(s => s.has_voted);
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50/50 via-slate-50 to-indigo-50/30">
@@ -204,53 +193,6 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({ onGoToAdmin, onOpenS
               )}
             </button>
           </form>
-
-          {/* Quick Demo Assist - Useful for quick testing */}
-          <div className="mt-6 pt-5 border-t border-slate-100">
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
-              <span>Akun Simulasi Uji Coba:</span>
-              <span className="text-[10px] text-blue-600 font-normal">Klik untuk isi otomatis</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              {sampleUnvoted && (
-                <button
-                  type="button"
-                  onClick={() => fillSample(sampleUnvoted.nisn, sampleUnvoted.birth_date)}
-                  className="text-left p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100/70 text-emerald-900 transition-all cursor-pointer"
-                >
-                  <div className="font-bold flex items-center gap-1.5 text-emerald-800">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>Siswa Belum Memilih</span>
-                  </div>
-                  <div className="text-[11px] text-emerald-700 truncate mt-0.5 font-medium">{sampleUnvoted.name}</div>
-                  <div className="text-[10px] text-emerald-600 font-mono mt-0.5">NISN: {sampleUnvoted.nisn}</div>
-                  <div className="text-[10px] text-amber-700 font-semibold mt-0.5 flex items-center gap-1">
-                    <i className="bi bi-calendar-event text-[9px]"></i>
-                    <span>Tgl Lahir: {formatDateIndonesian(sampleUnvoted.birth_date)}</span>
-                  </div>
-                </button>
-              )}
-
-              {sampleVoted && (
-                <button
-                  type="button"
-                  onClick={() => fillSample(sampleVoted.nisn, sampleVoted.birth_date)}
-                  className="text-left p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800 transition-all cursor-pointer"
-                >
-                  <div className="font-bold flex items-center gap-1.5 text-slate-700">
-                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                    <span>Siswa Sudah Memilih</span>
-                  </div>
-                  <div className="text-[11px] text-slate-600 truncate mt-0.5 font-medium">{sampleVoted.name}</div>
-                  <div className="text-[10px] text-slate-500 font-mono mt-0.5">NISN: {sampleVoted.nisn}</div>
-                  <div className="text-[10px] text-slate-600 font-semibold mt-0.5 flex items-center gap-1">
-                    <i className="bi bi-calendar-event text-[9px]"></i>
-                    <span>Tgl Lahir: {formatDateIndonesian(sampleVoted.birth_date)}</span>
-                  </div>
-                </button>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Footer links */}

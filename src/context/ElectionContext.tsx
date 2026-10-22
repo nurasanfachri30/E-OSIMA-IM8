@@ -295,11 +295,8 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       }
     }
 
-    // Also support fallback default 'admin123' if hash wasn't migrated
-    const isPassValid = 
-      hashedInput === targetPasswordHash ||
-      (passwordPlain === 'admin123' && targetUsername === cleanUser) ||
-      (passwordPlain === 'admin' && targetUsername === cleanUser);
+    // Strict cryptographic hash check to ensure admin password security
+    const isPassValid = hashedInput === targetPasswordHash;
 
     if (cleanUser === targetUsername && isPassValid) {
       setIsAdminAuthenticated(true);

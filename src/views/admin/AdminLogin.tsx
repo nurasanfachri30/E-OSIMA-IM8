@@ -8,8 +8,8 @@ interface AdminLoginProps {
 
 export const AdminLogin: React.FC<AdminLoginProps> = ({ onBackToStudent, onOpenSqlModal }) => {
   const { settings, loginAdmin, isDatabaseLive } = useElection();
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -68,7 +68,8 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onBackToStudent, onOpenS
                 <input
                   type="text"
                   required
-                  placeholder="admin"
+                  autoComplete="username"
+                  placeholder="Masukkan username admin"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-white placeholder-slate-500 transition-all font-mono"
@@ -87,6 +88,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onBackToStudent, onOpenS
                 <input
                   type="password"
                   required
+                  autoComplete="current-password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -113,21 +115,6 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onBackToStudent, onOpenS
               )}
             </button>
           </form>
-
-          {/* Quick Demo Assist */}
-          <div className="pt-4 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
-            <span>Kredensial Default:</span>
-            <button
-              type="button"
-              onClick={() => {
-                setUsername('admin');
-                setPassword('admin123');
-              }}
-              className="text-blue-400 hover:text-blue-300 font-mono font-medium underline underline-offset-4 cursor-pointer"
-            >
-              admin / admin123
-            </button>
-          </div>
         </div>
 
         {/* Footer Navigation */}
