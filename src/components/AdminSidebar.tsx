@@ -20,7 +20,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     adminActiveTab, 
     setAdminActiveTab, 
     logoutAdmin,
-    isDatabaseLive,
     candidates,
     students,
     classes
@@ -101,26 +100,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           </button>
         </div>
 
-        {/* Database status banner pill */}
-        <div className="px-4 pt-4 pb-2">
-          <button
-            onClick={onOpenSqlModal}
-            className={`w-full p-2.5 rounded-xl border text-xs flex items-center justify-between transition-all cursor-pointer ${
-              isDatabaseLive
-                ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/40'
-                : 'bg-amber-950/40 border-amber-500/30 text-amber-300 hover:bg-amber-900/40'
-            }`}
-            title="Klik untuk melihat status Supabase & skrip SQL"
-          >
-            <div className="flex items-center gap-2 truncate">
-              <span className={`w-2 h-2 rounded-full ${isDatabaseLive ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></span>
-              <span className="truncate font-medium">
-                {isDatabaseLive ? 'Supabase Live DB' : 'Local DB (Klik SQL)'}
-              </span>
-            </div>
-            <i className="bi bi-chevron-right text-[10px] opacity-70"></i>
-          </button>
-        </div>
+
 
         {/* Navigation items */}
         <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">

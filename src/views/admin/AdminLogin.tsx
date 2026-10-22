@@ -6,8 +6,8 @@ interface AdminLoginProps {
   onOpenSqlModal: () => void;
 }
 
-export const AdminLogin: React.FC<AdminLoginProps> = ({ onBackToStudent, onOpenSqlModal }) => {
-  const { settings, loginAdmin, isDatabaseLive } = useElection();
+export const AdminLogin: React.FC<AdminLoginProps> = ({ onBackToStudent }) => {
+  const { settings, loginAdmin } = useElection();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -118,15 +118,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onBackToStudent, onOpenS
         </div>
 
         {/* Footer Navigation */}
-        <div className="flex items-center justify-between text-xs text-slate-400 px-2">
-          <button
-            onClick={onOpenSqlModal}
-            className="hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
-          >
-            <i className={`bi ${isDatabaseLive ? 'bi-database-check text-emerald-400' : 'bi-database text-amber-400'}`}></i>
-            <span>Supabase Config</span>
-          </button>
-
+        <div className="flex items-center justify-end text-xs text-slate-400 px-2">
           <button
             onClick={onBackToStudent}
             className="hover:text-white font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"

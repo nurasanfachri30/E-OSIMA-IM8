@@ -7,8 +7,8 @@ interface StudentLoginProps {
   onOpenSqlModal: () => void;
 }
 
-export const StudentLogin: React.FC<StudentLoginProps> = ({ onGoToAdmin, onOpenSqlModal }) => {
-  const { settings, loginStudent, isDatabaseLive } = useElection();
+export const StudentLogin: React.FC<StudentLoginProps> = ({ onGoToAdmin }) => {
+  const { settings, loginStudent } = useElection();
   const [nisn, setNisn] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [dateInputMode, setDateInputMode] = useState<'picker' | 'text'>('picker');
@@ -196,15 +196,7 @@ export const StudentLogin: React.FC<StudentLoginProps> = ({ onGoToAdmin, onOpenS
         </div>
 
         {/* Footer links */}
-        <div className="flex items-center justify-between text-xs text-slate-500 px-2">
-          <button
-            onClick={onOpenSqlModal}
-            className="hover:text-blue-600 flex items-center gap-1 transition-colors cursor-pointer"
-          >
-            <i className={`bi ${isDatabaseLive ? 'bi-database-check text-emerald-600' : 'bi-database text-amber-500'}`}></i>
-            <span>Status Supabase</span>
-          </button>
-
+        <div className="flex items-center justify-end text-xs text-slate-500 px-2">
           <button
             onClick={onGoToAdmin}
             className="hover:text-blue-600 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
