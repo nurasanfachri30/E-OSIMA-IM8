@@ -1,0 +1,6 @@
+{
+  "name": "eOSIS - Sistem Pemilihan OSIS Online",
+  "description": "Aplikasi e-Voting Pemilihan Ketua dan Wakil Ketua OSIS modern, aman, transparan, dan terintegrasi dengan Supabase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
