@@ -19,8 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     isAdminAuthenticated, 
     currentStudent, 
     logoutStudent, 
-    logoutAdmin,
-    isDatabaseLive
+    logoutAdmin
   } = useElection();
 
   return (
@@ -72,33 +71,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Free Tier Publish Button */}
-          {onOpenPublishModal && (
-            <button
-              onClick={onOpenPublishModal}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-xs transition-all cursor-pointer hover:shadow-md hover:shadow-blue-500/20 active:scale-95"
-              title="Panduan publikasi eOSIS online gratis 100% (Vercel/Netlify)"
-            >
-              <i className="bi bi-rocket-takeoff-fill text-[11px]"></i>
-              <span className="hidden xs:inline sm:inline">Publish Free Tier</span>
-              <span className="xs:hidden sm:hidden">Publish</span>
-            </button>
-          )}
-
-          {/* Supabase status badge */}
-          {onOpenSqlModal && (
-            <button
-              onClick={onOpenSqlModal}
-              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
-                isDatabaseLive
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                  : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
-              }`}
-            >
-              <i className={`bi ${isDatabaseLive ? 'bi-check-circle-fill text-emerald-500' : 'bi-database-slash text-amber-500'}`}></i>
-              <span>{isDatabaseLive ? 'Supabase Connected' : 'Supabase SQL Setup'}</span>
-            </button>
-          )}
 
           {/* Role specific actions */}
           {currentRole === 'student' && currentStudent && (

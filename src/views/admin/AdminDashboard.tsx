@@ -328,21 +328,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onOpenSqlModal, 
                 <i className="bi bi-chevron-right text-slate-400"></i>
               </button>
 
-              <button
-                onClick={() => {
-                  if (onOpenPublishModal) onOpenPublishModal();
-                  else setAdminActiveTab('publish');
-                }}
-                className="w-full p-3 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50/90 to-indigo-50/90 hover:border-blue-500 hover:from-blue-100 hover:to-indigo-100 flex items-center justify-between text-xs font-bold text-blue-950 transition-all cursor-pointer shadow-xs"
-              >
-                <div className="flex items-center gap-2.5">
-                  <i className="bi bi-rocket-takeoff-fill text-blue-600 text-base"></i>
-                  <span>Publish Online Gratis (Free Tier)</span>
-                </div>
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-600 text-white shadow-xs">
-                  100% Free
-                </span>
-              </button>
             </div>
           </div>
 
