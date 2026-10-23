@@ -20,8 +20,7 @@ export const VoteResults: React.FC = () => {
   };
 
   const handleExecuteReset = async () => {
-    if (resetCodeInput !== 'RESET') {
-      alert('Ketik kata "RESET" dengan huruf kapital untuk konfirmasi.');
+    if (resetCodeInput.trim() !== 'RESET') {
       return;
     }
     await resetAllVotes();

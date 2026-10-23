@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useElection } from '../context/ElectionContext';
 import { AdminActiveTab } from '../types';
 
@@ -35,15 +35,17 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     { id: 'publish', label: 'Publish / Hosting', icon: 'bi-rocket-takeoff-fill', badge: 'Free' },
   ];
 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [logoError, setLogoError] = useState(false);
+
   const handleSelectTab = (tab: AdminActiveTab) => {
     setAdminActiveTab(tab);
     onClose();
   };
 
-  const handleLogout = () => {
-    if (window.confirm('Apakah Anda yakin ingin keluar dari panel administrator?')) {
-      logoutAdmin();
-    }
+  const handleConfirmLogout = () => {
+    setShowLogoutConfirm(false);
+    logoutAdmin();
   };
 
   return (
@@ -65,19 +67,16 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         {/* Brand header */}
         <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/20 font-bold text-white text-lg">
-              {settings.school_logo_url ? (
+            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/20 font-bold text-white text-lg overflow-hidden">
+              {settings.school_logo_url && !logoError ? (
                 <img
                   src={settings.school_logo_url}
                   alt="Logo"
-                  className="w-full h-full object-cover rounded-xl"
-                  onError={(e) => {
-                    // Fallback to icon
-                    (e.target as HTMLElement).style.display = 'none';
-                  }}
+                  className="w-full h-full object-cover"
+                  onError={() => setLogoError(true)}
                 />
               ) : (
-                <i className="bi bi-box-seam-fill"></i>
+                <i className="bi bi-mortarboard-fill text-white"></i>
               )}
             </div>
             <div className="min-w-0">
@@ -157,7 +156,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           </div>
 
           <button
-            onClick={handleLogout}
+            onClick={() => setShowLogoutConfirm(true)}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:text-white hover:bg-rose-600/20 border border-rose-500/20 transition-all cursor-pointer"
           >
             <i className="bi bi-box-arrow-right"></i>
@@ -165,6 +164,39 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           </button>
         </div>
       </aside>
+
+      {/* In-app Logout Confirmation Modal (no window.confirm error) */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-slate-200 text-center space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto text-xl">
+              <i className="bi bi-box-arrow-right"></i>
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-extrabold text-slate-900 text-base">Keluar dari Panel Admin?</h3>
+              <p className="text-xs text-slate-500">
+                Sesi administrator akan diakhiri dan dialihkan kembali ke halaman utama.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowLogoutConfirm(false)}
+                className="py-2.5 px-3 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmLogout}
+                className="py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-md shadow-rose-500/25 cursor-pointer"
+              >
+                Ya, Keluar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

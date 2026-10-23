@@ -16,6 +16,13 @@ import {
 import { supabase, checkSupabaseConnection } from '../lib/supabase';
 import { sha256 } from '../lib/crypto';
 import { normalizeDateToYMD, isDateMatching } from '../lib/dateUtils';
+import {
+  safeLocalStorageGet,
+  safeLocalStorageSet,
+  safeSessionStorageGet,
+  safeSessionStorageSet,
+  safeSessionStorageRemove
+} from '../lib/storageUtils';
 
 interface ElectionContextType {
   settings: SchoolSettings;
@@ -76,23 +83,19 @@ const STORAGE_KEYS = {
 
 export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settings, setSettings] = useState<SchoolSettings>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-    return saved ? JSON.parse(saved) : initialSettings;
+    return safeLocalStorageGet<SchoolSettings>(STORAGE_KEYS.SETTINGS, initialSettings);
   });
 
   const [classes, setClasses] = useState<ClassItem[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.CLASSES);
-    return saved ? JSON.parse(saved) : initialClasses;
+    return safeLocalStorageGet<ClassItem[]>(STORAGE_KEYS.CLASSES, initialClasses);
   });
 
   const [students, setStudents] = useState<Student[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.STUDENTS);
-    return saved ? JSON.parse(saved) : initialStudents;
+    return safeLocalStorageGet<Student[]>(STORAGE_KEYS.STUDENTS, initialStudents);
   });
 
   const [candidates, setCandidates] = useState<Candidate[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.CANDIDATES);
-    return saved ? JSON.parse(saved) : initialCandidates;
+    return safeLocalStorageGet<Candidate[]>(STORAGE_KEYS.CANDIDATES, initialCandidates);
   });
 
   const [currentRole, setCurrentRole] = useState<UserRole>('guest');
@@ -104,21 +107,21 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [tableDetails, setTableDetails] = useState<{ [key: string]: boolean }>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Sync to localStorage
+  // Sync to localStorage safely with quota protection
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+    safeLocalStorageSet(STORAGE_KEYS.SETTINGS, settings);
   }, [settings]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.CLASSES, JSON.stringify(classes));
+    safeLocalStorageSet(STORAGE_KEYS.CLASSES, classes);
   }, [classes]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(students));
+    safeLocalStorageSet(STORAGE_KEYS.STUDENTS, students);
   }, [students]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.CANDIDATES, JSON.stringify(candidates));
+    safeLocalStorageSet(STORAGE_KEYS.CANDIDATES, candidates);
   }, [candidates]);
 
   // Check Supabase connection and fetch live data
@@ -161,23 +164,18 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, []);
 
-  // Restore sessions on mount
+  // Restore sessions on mount safely
   useEffect(() => {
-    const savedAdmin = sessionStorage.getItem(STORAGE_KEYS.ADMIN_SESSION);
+    const savedAdmin = safeSessionStorageGet<string | null>(STORAGE_KEYS.ADMIN_SESSION, null);
     if (savedAdmin === 'true') {
       setIsAdminAuthenticated(true);
       setCurrentRole('admin');
     }
 
-    const savedStudentStr = sessionStorage.getItem(STORAGE_KEYS.STUDENT_SESSION);
-    if (savedStudentStr) {
-      try {
-        const parsed = JSON.parse(savedStudentStr);
-        setCurrentStudent(parsed);
-        setCurrentRole('student');
-      } catch {
-        sessionStorage.removeItem(STORAGE_KEYS.STUDENT_SESSION);
-      }
+    const savedStudent = safeSessionStorageGet<Student | null>(STORAGE_KEYS.STUDENT_SESSION, null);
+    if (savedStudent) {
+      setCurrentStudent(savedStudent);
+      setCurrentRole('student');
     }
 
     refreshAllData();
@@ -189,7 +187,7 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const found = students.find(s => s.id === currentStudent.id || s.nisn === currentStudent.nisn);
       if (found) {
         setCurrentStudent(found);
-        sessionStorage.setItem(STORAGE_KEYS.STUDENT_SESSION, JSON.stringify(found));
+        safeSessionStorageSet(STORAGE_KEYS.STUDENT_SESSION, found);
       }
     }
   }, [students, currentStudent]);
@@ -255,7 +253,7 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     setCurrentStudent(studentRecord);
     setCurrentRole('student');
-    sessionStorage.setItem(STORAGE_KEYS.STUDENT_SESSION, JSON.stringify(studentRecord));
+    safeSessionStorageSet(STORAGE_KEYS.STUDENT_SESSION, studentRecord);
 
     return {
       success: true,
@@ -265,7 +263,7 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
 
   const logoutStudent = () => {
-    sessionStorage.removeItem(STORAGE_KEYS.STUDENT_SESSION);
+    safeSessionStorageRemove(STORAGE_KEYS.STUDENT_SESSION);
     setCurrentStudent(null);
     setCurrentRole('guest');
   };
@@ -301,7 +299,7 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (cleanUser === targetUsername && isPassValid) {
       setIsAdminAuthenticated(true);
       setCurrentRole('admin');
-      sessionStorage.setItem(STORAGE_KEYS.ADMIN_SESSION, 'true');
+      safeSessionStorageSet(STORAGE_KEYS.ADMIN_SESSION, 'true');
       return { success: true, message: 'Login Administrator berhasil!' };
     }
 
@@ -309,7 +307,7 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const logoutAdmin = () => {
-    sessionStorage.removeItem(STORAGE_KEYS.ADMIN_SESSION);
+    safeSessionStorageRemove(STORAGE_KEYS.ADMIN_SESSION);
     setIsAdminAuthenticated(false);
     setCurrentRole('guest');
     setAdminActiveTab('beranda');
@@ -391,7 +389,7 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       voted_at: votedTime,
     };
     setCurrentStudent(updatedStudent);
-    sessionStorage.setItem(STORAGE_KEYS.STUDENT_SESSION, JSON.stringify(updatedStudent));
+    safeSessionStorageSet(STORAGE_KEYS.STUDENT_SESSION, updatedStudent);
 
     return {
       success: true,

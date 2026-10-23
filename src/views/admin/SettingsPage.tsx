@@ -23,6 +23,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onOpenSqlModal, onOp
   const [schoolLogoUrl, setSchoolLogoUrl] = useState(settings.school_logo_url || '');
   const [isVotingOpen, setIsVotingOpen] = useState(settings.is_voting_open);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [logoUploadError, setLogoUploadError] = useState('');
   const [schoolSuccessMsg, setSchoolSuccessMsg] = useState('');
 
   // Admin security credentials state
@@ -39,12 +40,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onOpenSqlModal, onOp
     if (!file) return;
 
     setIsUploadingLogo(true);
+    setLogoUploadError('');
     try {
       const url = await uploadImageToStorage(file, 'school');
       setSchoolLogoUrl(url);
     } catch (err) {
       console.error('Logo upload error:', err);
-      alert('Gagal mengunggah logo ke Supabase storage.');
+      setLogoUploadError('Gagal memproses unggahan logo. Gunakan format gambar PNG/JPEG.');
     } finally {
       setIsUploadingLogo(false);
     }
@@ -224,6 +226,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onOpenSqlModal, onOp
                       />
                     </label>
                   </div>
+                  {logoUploadError && (
+                    <p className="text-[11px] text-rose-600 font-medium">
+                      {logoUploadError}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

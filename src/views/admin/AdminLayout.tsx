@@ -9,6 +9,7 @@ import { CandidatesManagement } from './CandidatesManagement';
 import { VoteResults } from './VoteResults';
 import { SettingsPage } from './SettingsPage';
 import { PublishPage } from './PublishPage';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 
 interface AdminLayoutProps {
   onOpenSqlModal: () => void;
@@ -16,7 +17,7 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ onOpenSqlModal, onOpenPublishModal }) => {
-  const { adminActiveTab } = useElection();
+  const { adminActiveTab, setAdminActiveTab } = useElection();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const renderActiveView = () => {
@@ -59,7 +60,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ onOpenSqlModal, onOpen
         />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-          {renderActiveView()}
+          <ErrorBoundary
+            fallbackTitle="Gagal Menampilkan Halaman Admin"
+            onReset={() => setAdminActiveTab('beranda')}
+          >
+            {renderActiveView()}
+          </ErrorBoundary>
         </main>
       </div>
     </div>

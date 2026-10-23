@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useElection } from '../context/ElectionContext';
 
 interface NavbarProps {
@@ -22,12 +22,14 @@ export const Navbar: React.FC<NavbarProps> = ({
     logoutAdmin
   } = useElection();
 
+  const [logoError, setLogoError] = useState(false);
+
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Left branding & menu button */}
         <div className="flex items-center gap-3">
-          {currentRole === 'admin' && onToggleSidebar && (
+          {currentRole === 'admin' && isAdminAuthenticated && onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
               className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
@@ -37,19 +39,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => {
-            if (currentRole === 'guest') return;
-            // keep current view
-          }}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-500 text-white flex items-center justify-center font-black shadow-md shadow-blue-500/20 shrink-0">
-              {settings.school_logo_url ? (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-500 text-white flex items-center justify-center font-black shadow-md shadow-blue-500/20 shrink-0 overflow-hidden">
+              {settings.school_logo_url && !logoError ? (
                 <img
                   src={settings.school_logo_url}
                   alt="School Logo"
-                  className="w-full h-full object-cover rounded-xl"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = 'none';
-                  }}
+                  className="w-full h-full object-cover"
+                  onError={() => setLogoError(true)}
                 />
               ) : (
                 <span className="text-sm">OSIS</span>
@@ -89,14 +86,26 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           )}
 
-          {currentRole === 'admin' && (
+          {currentRole === 'admin' && isAdminAuthenticated && (
             <div className="flex items-center gap-2">
               <button
                 onClick={logoutAdmin}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 hover:bg-rose-100 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 hover:bg-rose-100 transition-colors cursor-pointer"
               >
                 <i className="bi bi-box-arrow-right"></i>
                 <span>Keluar</span>
+              </button>
+            </div>
+          )}
+
+          {currentRole === 'admin' && !isAdminAuthenticated && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentRole('guest')}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
+              >
+                <i className="bi bi-arrow-left"></i>
+                <span>Bilik Suara Siswa</span>
               </button>
             </div>
           )}

@@ -88,11 +88,50 @@ export async function uploadImageToStorage(
   }
 }
 
-export function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
+/**
+ * Compress and downscale image file to max dimension 400px at 0.75 JPEG quality.
+ * Keeps file size tiny (~15KB - 30KB) to prevent QuotaExceededError and memory bloat.
+ */
+export function fileToBase64(file: File, maxDim = 400, quality = 0.75): Promise<string> {
+  return new Promise((resolve) => {
     const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, width);
+        canvas.height = Math.max(1, height);
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressed = canvas.toDataURL('image/jpeg', quality);
+          resolve(compressed);
+        } else {
+          resolve((e.target?.result as string) || '');
+        }
+      };
+      img.onerror = () => {
+        resolve((e.target?.result as string) || '');
+      };
+      img.src = (e.target?.result as string) || '';
+    };
+    reader.onerror = () => resolve('');
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
   });
 }
+

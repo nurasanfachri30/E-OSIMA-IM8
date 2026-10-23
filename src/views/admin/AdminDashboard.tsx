@@ -240,40 +240,54 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onOpenSqlModal, 
           </div>
 
           <div className="space-y-4">
-            {candidates.map((cand) => {
-              const candVote = cand.vote_count || 0;
-              const percent = totalVotesCast > 0 ? ((candVote / totalVotesCast) * 100).toFixed(1) : '0';
-              return (
-                <div key={cand.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-blue-600 text-white font-extrabold flex items-center justify-center text-xs">
-                        0{cand.candidate_number}
+            {candidates.length === 0 ? (
+              <div className="p-8 text-center text-slate-400 bg-slate-50/70 rounded-2xl border border-dashed border-slate-200 space-y-2">
+                <i className="bi bi-person-badge text-3xl text-slate-300 block"></i>
+                <p className="text-xs font-medium text-slate-600">Belum ada calon kandidat yang didaftarkan.</p>
+                <button
+                  type="button"
+                  onClick={() => setAdminActiveTab('kandidat')}
+                  className="text-xs font-bold text-blue-600 hover:underline cursor-pointer"
+                >
+                  + Tambah Paslon Kandidat
+                </button>
+              </div>
+            ) : (
+              candidates.map((cand) => {
+                const candVote = cand.vote_count || 0;
+                const percent = totalVotesCast > 0 ? ((candVote / totalVotesCast) * 100).toFixed(1) : '0';
+                return (
+                  <div key={cand.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-blue-600 text-white font-extrabold flex items-center justify-center text-xs">
+                          0{cand.candidate_number}
+                        </div>
+                        <div>
+                          <div className="font-bold text-slate-900 text-sm">
+                            {cand.chairman_name} &amp; {cand.vice_chairman_name}
+                          </div>
+                          <div className="text-[11px] text-slate-500 italic truncate max-w-xs sm:max-w-md">
+                            {cand.slogan || 'Paslon Calon Ketua & Wakil OSIS'}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-bold text-slate-900 text-sm">
-                          {cand.chairman_name} &amp; {cand.vice_chairman_name}
-                        </div>
-                        <div className="text-[11px] text-slate-500 italic truncate max-w-xs sm:max-w-md">
-                          {cand.slogan || 'Paslon Calon Ketua & Wakil OSIS'}
-                        </div>
+                      <div className="text-right">
+                        <div className="font-mono font-black text-slate-900 text-base">{candVote} Suara</div>
+                        <div className="text-xs text-blue-600 font-bold">{percent}%</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="font-mono font-black text-slate-900 text-base">{candVote} Suara</div>
-                      <div className="text-xs text-blue-600 font-bold">{percent}%</div>
-                    </div>
-                  </div>
 
-                  <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                    <div
-                      className="bg-blue-600 h-full rounded-full transition-all duration-500"
-                      style={{ width: `${percent}%` }}
-                    ></div>
+                    <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div
+                        className="bg-blue-600 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${percent}%` }}
+                      ></div>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 
