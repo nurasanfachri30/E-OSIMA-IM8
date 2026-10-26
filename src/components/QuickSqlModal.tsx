@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS public.students (
     name TEXT NOT NULL,
     birth_date DATE NOT NULL,
     class_name TEXT NOT NULL,
-    gender VARCHAR(10) DEFAULT 'Laki-laki',
     has_voted BOOLEAN NOT NULL DEFAULT false,
     voted_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT now()

@@ -484,7 +484,6 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           name: stu.name,
           birth_date: cleanBirth,
           class_name: stu.class_name,
-          gender: stu.gender || 'Laki-laki',
           has_voted: false
         }]).select().single();
 
@@ -567,7 +566,7 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // --- Batch Import Students ---
   const importStudents = async (
-    studentsList: Array<{ nisn: string; name: string; class_name: string; birth_date?: string; gender?: 'Laki-laki' | 'Perempuan' }>
+    studentsList: Array<{ nisn: string; name: string; class_name: string; birth_date?: string }>
   ) => {
     if (!studentsList || studentsList.length === 0) {
       return { success: false, count: 0, message: 'Tidak ada data siswa untuk diimpor.' };
@@ -597,7 +596,6 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           name: cleanName,
           class_name: cleanClass,
           birth_date: cleanBirth,
-          gender: item.gender || existing.gender || 'Laki-laki',
         };
         toUpdate.push(updated);
         existingMap.set(cleanNisn, updated);
@@ -608,7 +606,6 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           name: cleanName,
           class_name: cleanClass,
           birth_date: cleanBirth,
-          gender: item.gender || 'Laki-laki',
           has_voted: false,
           created_at: new Date().toISOString()
         };
@@ -645,7 +642,6 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               name: stu.name,
               birth_date: stu.birth_date,
               class_name: stu.class_name,
-              gender: stu.gender
             })
             .eq('nisn', stu.nisn);
 
@@ -662,7 +658,6 @@ export const ElectionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             name: s.name,
             class_name: s.class_name,
             birth_date: s.birth_date,
-            gender: s.gender,
             has_voted: false
           }));
 

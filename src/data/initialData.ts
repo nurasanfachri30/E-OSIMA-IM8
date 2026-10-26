@@ -56,7 +56,6 @@ export const initialStudents: Student[] = [
     name: 'Ahmad Rizky Pratama',
     birth_date: '2008-05-14',
     class_name: 'X MIPA 1',
-    gender: 'Laki-laki',
     has_voted: false,
   },
   {
@@ -65,7 +64,6 @@ export const initialStudents: Student[] = [
     name: 'Bella Anindya Putri',
     birth_date: '2008-08-22',
     class_name: 'X MIPA 1',
-    gender: 'Perempuan',
     has_voted: false,
   },
   {
@@ -74,7 +72,6 @@ export const initialStudents: Student[] = [
     name: 'Dimas Satria Wijaya',
     birth_date: '2008-01-30',
     class_name: 'X MIPA 2',
-    gender: 'Laki-laki',
     has_voted: false,
   },
   {
@@ -83,7 +80,6 @@ export const initialStudents: Student[] = [
     name: 'Eka Nur Halizah',
     birth_date: '2007-11-19',
     class_name: 'XI IPS 1',
-    gender: 'Perempuan',
     has_voted: true,
     voted_at: '2026-10-19T08:15:20.000Z',
   },
@@ -93,7 +89,6 @@ export const initialStudents: Student[] = [
     name: 'Fajar Ramadhan',
     birth_date: '2006-03-25',
     class_name: 'XII MIPA 1',
-    gender: 'Laki-laki',
     has_voted: false,
   },
   {
@@ -102,7 +97,6 @@ export const initialStudents: Student[] = [
     name: 'Gita Permata Sari',
     birth_date: '2006-09-08',
     class_name: 'XII MIPA 1',
-    gender: 'Perempuan',
     has_voted: true,
     voted_at: '2026-10-19T09:42:10.000Z',
   },
@@ -112,7 +106,6 @@ export const initialStudents: Student[] = [
     name: 'Hafiz Maulana',
     birth_date: '2007-04-12',
     class_name: 'XI IPS 2',
-    gender: 'Laki-laki',
     has_voted: false,
   },
   {
@@ -121,7 +114,6 @@ export const initialStudents: Student[] = [
     name: 'Indah Kusuma Wardani',
     birth_date: '2008-12-05',
     class_name: 'X MIPA 2',
-    gender: 'Perempuan',
     has_voted: false,
   },
 ];

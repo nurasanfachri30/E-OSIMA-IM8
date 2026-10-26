@@ -85,13 +85,6 @@ export const StudentDashboard: React.FC = () => {
               </span>
               <p className="font-semibold text-slate-800 text-sm font-mono">{currentStudent.birth_date}</p>
             </div>
-
-            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1 sm:col-span-2">
-              <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">
-                Jenis Kelamin
-              </span>
-              <p className="font-semibold text-slate-800 text-sm">{currentStudent.gender || 'Laki-laki'}</p>
-            </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100 text-xs text-blue-900 flex items-start gap-3">

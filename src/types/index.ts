@@ -26,7 +26,6 @@ export interface Student {
   name: string;
   birth_date: string; // YYYY-MM-DD
   class_name: string;
-  gender?: string;
   has_voted: boolean;
   voted_at?: string;
   created_at?: string;
